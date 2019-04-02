@@ -10,7 +10,11 @@ import org.springframework.http.MediaType;
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -47,7 +51,43 @@ public class EventControllerTests extends BaseControllerTest {
                 .andExpect(jsonPath("free").value(false))
                 .andExpect(jsonPath("offline").value(true))
                 .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
-                .andDo(document("create-event"))
+                .andDo(document("create-event",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.ACCEPT).description("application/json;charset=UTF-8"),
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json;charset=UTF-8")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("Name of new event"),
+                                fieldWithPath("description").description("Description of new event"),
+                                fieldWithPath("beginEnrollmentDateTime").description("date time of begin of enrollment"),
+                                fieldWithPath("closeEnrollmentDateTime").description("date time of close of enrollment"),
+                                fieldWithPath("beginEventDateTime").description("date time of begin of event"),
+                                fieldWithPath("endEventDateTime").description("date time of end of event"),
+                                fieldWithPath("location").description("location of new event"),
+                                fieldWithPath("basePrice").description("base price of new event"),
+                                fieldWithPath("maxPrice").description("max price of new event"),
+                                fieldWithPath("limitOfEnrollment").description("limit of enrollment")
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("application/json;charset=UTF-8")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("identifier of new event"),
+                                fieldWithPath("name").description("name of new event"),
+                                fieldWithPath("description").description("Description of new event"),
+                                fieldWithPath("beginEnrollmentDateTime").description("date time of begin of enrollment"),
+                                fieldWithPath("closeEnrollmentDateTime").description("date time of close of enrollment"),
+                                fieldWithPath("beginEventDateTime").description("date time of begin of event"),
+                                fieldWithPath("endEventDateTime").description("date time of end of event"),
+                                fieldWithPath("location").description("location of new event"),
+                                fieldWithPath("basePrice").description("base price of new event"),
+                                fieldWithPath("maxPrice").description("max price of new event"),
+                                fieldWithPath("limitOfEnrollment").description("limit of enrollment"),
+                                fieldWithPath("free").description("It tells is this event is free or not"),
+                                fieldWithPath("offline").description("It tells is this event is offline or not"),
+                                fieldWithPath("eventStatus").description("event status")
+                        )
+                ))
         ;
     }
 
