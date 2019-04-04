@@ -1,17 +1,24 @@
 package com.autoever.pilot.events;
 
+import com.autoever.pilot.accounts.Account;
+import com.autoever.pilot.accounts.CurrentUser;
+import lombok.var;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.*;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @Controller
 @RequestMapping(value = "/api/events")
@@ -51,12 +58,9 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity queryEvents(Pageable pageable,
-                                      PagedResourcesAssembler<Event> assembler) {
+                                      @CurrentUser Account account) {
         Page<Event> page = this.eventRepository.findAll(pageable);
 
-//        if (account != null) {
-//            pagedResources.add(linkTo(EventController.class).withRel("create-event"));
-//        }
         return ResponseEntity.ok(page);
     }
 
