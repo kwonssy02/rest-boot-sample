@@ -5,6 +5,6 @@ import lombok.*;
 @Getter @Setter
 @Builder @NoArgsConstructor @AllArgsConstructor
 public class Authority {
-    String userId;
-    String role;
+    String username;
+    String authority;
 }

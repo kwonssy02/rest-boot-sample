@@ -1,70 +1,66 @@
 package com.autoever.pilot.accounts;
 
-import com.autoever.pilot.users.Role;
 import com.autoever.pilot.model.User;
-import com.autoever.pilot.users.UserService;
-import org.hamcrest.Matchers;
-import org.junit.Rule;
+import com.autoever.pilot.users.service.UserService;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Iterator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class UserServiceTest {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    @Autowired UserService userService;
 
-    @Autowired
-    UserService userService;
+    private User user1;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Test
-    public void findByUsername() {
-        // Given
-        String password = "keesun";
-        String username = "keesun@email.com";
-        User user = User.builder()
-                .email(username)
-                .password(password)
-                .roles(new HashSet<>(Arrays.asList(Role.ADMIN, Role.USER)))
-                .build();
-        this.userService.saveAccount(user);
-
-        // When
-        UserDetailsService userDetailsService = (UserDetailsService) userService;
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-        // Then
-        assertThat(this.passwordEncoder.matches(password, userDetails.getPassword())).isTrue();
+    @Before
+    public void setup() {
+        user1 = new User();
+        user1.setUsername("user1");
+        user1.setPassword("pass1");
+        user1.setEmail("user@email.com");
+        user1.setAccountNonExpired(true);
+        user1.setAccountNonLocked(true);
+        user1.setName("USER1");
+        user1.setCredentialsNonExpired(true);
+        user1.setEnabled(true);
+        user1.setAuthorities(AuthorityUtils.createAuthorityList("USER","ADMIN"));
     }
 
     @Test
-    public void findByUsernameFail() {
-        // Expected
-        String username = "random@email.com";
-        expectedException.expect(UsernameNotFoundException.class);
-        expectedException.expectMessage(Matchers.containsString(username));
+    public void insertUserTest() throws Exception {
+        userService.deleteUser(user1.getUsername());
+        userService.insertUser(user1);
+        User user = userService.selectUser(user1.getUsername());
+        assertThat(user.getUsername()).isEqualTo(user1.getUsername());
 
-        // When
-        userService.loadUserByUsername(username);
+        PasswordEncoder passwordEncoder = userService.passwordEncoder();
+        assertThat(passwordEncoder.matches("pass1", user.getPassword())).isTrue();
+
+        Collection<? extends GrantedAuthority> authorities1 = user1.getAuthorities();
+        Iterator<? extends GrantedAuthority> it = authorities1.iterator();
+        Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) user.getAuthorities();
+        while (it.hasNext()) {
+            GrantedAuthority authority = it.next();
+            assertThat(authorities, hasItem(new SimpleGrantedAuthority(authority.getAuthority())));
+        }
     }
+
 }

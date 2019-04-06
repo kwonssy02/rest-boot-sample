@@ -1,6 +1,5 @@
-package com.autoever.pilot.common.security;
+package com.autoever.pilot.common.exception;
 
-import com.autoever.pilot.common.exception.AlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

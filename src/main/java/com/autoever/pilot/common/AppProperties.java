@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotEmpty;
 
 @Component
-@ConfigurationProperties(prefix = "my-app")
+@ConfigurationProperties(prefix = "app")
 @Getter @Setter
 public class AppProperties {
 
     @NotEmpty
-    private String testname;
+    private String pageSize;
 }

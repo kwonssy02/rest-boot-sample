@@ -2,6 +2,7 @@ package com.autoever.pilot.events;
 
 import com.autoever.pilot.common.BaseControllerTest;
 import com.autoever.pilot.common.TestDescription;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Ignore
 public class EventControllerTests extends BaseControllerTest {
 
     @Test

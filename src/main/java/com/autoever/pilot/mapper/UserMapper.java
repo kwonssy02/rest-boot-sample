@@ -1,10 +1,7 @@
 package com.autoever.pilot.mapper;
 
 import com.autoever.pilot.model.User;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,14 +10,21 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
-    @Select("SELECT * FROM users WHERE id = #{id}")
-    User selectUser(@Param("id") String id);
+    @Select("SELECT * FROM users WHERE username = #{username}")
+    User selectUser(@Param("username") String username);
 
     @Select("SELECT * FROM users")
     List<User> selectUsers();
 
     void insertUser(User user);
 
-    @Delete("DELETE FROM users where id = #{id}")
-    int deleteUser(String id);
+    @Delete("DELETE FROM users where username = #{username}")
+    int deleteUser(String username);
+
+
+    List<String> selectAuthorities(String username);
+
+    void insertAuthority(User user);
+
+    int deleteAuthority(String username);
 }

@@ -1,32 +1,36 @@
 package com.autoever.pilot.users;
 
-import com.autoever.pilot.mapper.UserMapper;
 import com.autoever.pilot.model.User;
+import com.autoever.pilot.users.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserMapper userMapper;
+    @Autowired UserService userService;
+    @Autowired AuthenticationManager authenticationManager;
+    @Autowired ModelMapper modelMapper;
 
-    @GetMapping
+
+    @GetMapping("/api/users")
     public ResponseEntity selectUsers() {
 
-        List<User> users = userMapper.selectUsers();
+        List<User> users = userService.selectUsers();
 
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity selectUser(@PathVariable String id) {
+    @GetMapping("/api/users/{username}")
+    public ResponseEntity selectUser(@PathVariable String username) {
 
-        User user = userMapper.selectUser(id);
+        User user = userService.selectUser(username);
 
         if(user == null) {
             return ResponseEntity.notFound().build();
@@ -35,18 +39,18 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping
-    public ResponseEntity createUser(@RequestBody User user) {
-
-        userMapper.insertUser(user);
+    @PostMapping("/api/users")
+    public ResponseEntity createUser(@RequestBody User user) throws Exception {
+        user.setAuthorities(AuthorityUtils.createAuthorityList("USER"));
+        userService.insertUser(user);
 
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable String id) {
+    @DeleteMapping("/api/users/{username}")
+    public ResponseEntity deleteUser(@PathVariable String username) {
 
-        int result = userMapper.deleteUser(id);
+        int result = userService.deleteUser(username);
         if(result == 0) {
             return ResponseEntity.badRequest().build();
         }
