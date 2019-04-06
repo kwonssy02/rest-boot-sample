@@ -1,4 +1,4 @@
-package com.autoever.pilot.accounts;
+package com.autoever.pilot.users;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

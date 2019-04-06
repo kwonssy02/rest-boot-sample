@@ -1,5 +1,8 @@
 package com.autoever.pilot.accounts;
 
+import com.autoever.pilot.users.Role;
+import com.autoever.pilot.model.User;
+import com.autoever.pilot.users.UserService;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,13 +26,13 @@ import static org.assertj.core.api.Assertions.fail;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class AccountServiceTest {
+public class UserServiceTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Autowired
-    AccountService accountService;
+    UserService userService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -39,15 +42,15 @@ public class AccountServiceTest {
         // Given
         String password = "keesun";
         String username = "keesun@email.com";
-        Account account = Account.builder()
+        User user = User.builder()
                 .email(username)
                 .password(password)
-                .roles(new HashSet<>(Arrays.asList(AccountRole.ADMIN, AccountRole.USER)))
+                .roles(new HashSet<>(Arrays.asList(Role.ADMIN, Role.USER)))
                 .build();
-        this.accountService.saveAccount(account);
+        this.userService.saveAccount(user);
 
         // When
-        UserDetailsService userDetailsService = (UserDetailsService) accountService;
+        UserDetailsService userDetailsService = (UserDetailsService) userService;
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         // Then
@@ -62,6 +65,6 @@ public class AccountServiceTest {
         expectedException.expectMessage(Matchers.containsString(username));
 
         // When
-        accountService.loadUserByUsername(username);
+        userService.loadUserByUsername(username);
     }
 }

@@ -3,7 +3,6 @@ package com.autoever.pilot.events;
 import com.autoever.pilot.common.BaseControllerTest;
 import com.autoever.pilot.common.TestDescription;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -11,8 +10,6 @@ import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -20,9 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class EventControllerTests extends BaseControllerTest {
-
-    @Autowired
-    EventRepository eventRepository;
 
     @Test
     @TestDescription("정상적으로 이벤트를 생성하는 테스트")
@@ -269,7 +263,8 @@ public class EventControllerTests extends BaseControllerTest {
 
     private Event generateEvent(int index) {
         Event event = buildEvent(index);
-        return this.eventRepository.save(event);
+        return null;
+//        return this.eventRepository.save(event);
     }
 
     private Event buildEvent(int index) {

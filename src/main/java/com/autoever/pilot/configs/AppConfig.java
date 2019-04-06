@@ -1,8 +1,8 @@
 package com.autoever.pilot.configs;
 
-import com.autoever.pilot.accounts.Account;
-import com.autoever.pilot.accounts.AccountRole;
-import com.autoever.pilot.accounts.AccountService;
+import com.autoever.pilot.model.User;
+import com.autoever.pilot.users.Role;
+import com.autoever.pilot.users.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -30,16 +30,16 @@ public class AppConfig {
     public ApplicationRunner applicationRunner() {
         return new ApplicationRunner() {
             @Autowired
-            AccountService accountService;
+            UserService userService;
 
             @Override
             public void run(ApplicationArguments args) throws Exception {
-                Account keesun = Account.builder()
+                User keesun = User.builder()
                     .email("keesun@email.com")
                     .password("keesun")
-                    .roles(new HashSet<>(Arrays.asList(AccountRole.ADMIN, AccountRole.USER)))
+                    .roles(new HashSet<>(Arrays.asList(Role.ADMIN, Role.USER)))
                     .build();
-                accountService.saveAccount(keesun);
+                userService.saveAccount(keesun);
             }
         };
     }

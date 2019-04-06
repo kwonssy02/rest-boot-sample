@@ -1,6 +1,6 @@
 package com.autoever.pilot.configs;
 
-import com.autoever.pilot.accounts.AccountService;
+import com.autoever.pilot.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    AccountService accountService;
+    UserService userService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -39,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(accountService)
+        auth.
+                userDetailsService(userService)
                 .passwordEncoder(passwordEncoder);
     }
 
@@ -49,5 +50,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().mvcMatchers("/docs/index.html");
         // 기본 정적 리소스 security 적용 예외
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.GET,"/api/users/**").permitAll()
+                .anyRequest().authenticated();
     }
 }
