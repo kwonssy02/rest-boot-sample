@@ -5,17 +5,33 @@
     <select id="insertUser" parameterType="User">
 		INSERT INTO users
 		(
-			`id`,
-			`name`,
-			`email`,
-			`password`
+			username,
+			name,
+			email,
+			password
 		)
 		VALUES
 		(
-			#{id},
+			#{username},
 			#{name},
 			#{email},
 			#{password}
 		)
 	</select>
+
+	<select id="selectAuthorities" parameterType="String" resultType="String">
+          SELECT authority FROM authorities WHERE username = #{username}
+     </select>
+
+	<insert id="insertAuthority" parameterType="org.springframework.security.core.GrantedAuthority">
+		INSERT INTO authorities (username, authority)
+		VALUES
+		<foreach item="item" index="index" collection="authorities" separator=",">
+			(#{username}, #{item.authority})
+		</foreach>
+	</insert>
+
+	<delete id="deleteAuthority" parameterType="String">
+          DELETE FROM authorities WHERE username = #{username}
+     </delete>
 </mapper>

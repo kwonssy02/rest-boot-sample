@@ -1,8 +1,20 @@
-CREATE TABLE `users` (
-  `id` varchar(45) NOT NULL,
-  `name` varchar(16) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(32) NOT NULL,
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+drop table if exists authorities;
+
+create table authorities
+(
+  username varchar(45) not null,
+  authority varchar(10) not null
+);
+
+drop table if exists users;
+
+create table users
+(
+  username varchar(45) not null
+    primary key,
+  name varchar(16) not null,
+  email varchar(255) not null,
+  password varchar(64) not null,
+  create_time timestamp default CURRENT_TIMESTAMP null
+);
+
