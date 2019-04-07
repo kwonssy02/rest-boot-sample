@@ -18,11 +18,6 @@ public class AppConfig {
     public ModelMapper modelMapper() { return new ModelMapper(); }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    @Bean
     public ApplicationRunner applicationRunner() {
         return new ApplicationRunner() {
             @Override
