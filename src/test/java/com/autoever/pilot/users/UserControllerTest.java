@@ -152,7 +152,6 @@ public class UserControllerTest extends BaseControllerTest {
                 .content(objectMapper.writeValueAsString(newUser)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("User already exists"))
         ;
     }
 
